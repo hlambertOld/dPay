@@ -5,8 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.jasper.tagplugins.jstl.core.Url;
-
 import swp.model.AuctionPaymentRequest;
 import swp.service.factory.ServiceFactory;
 import dk.brics.jwig.BadRequestException;
