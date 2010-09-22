@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +40,10 @@ public class AuctionItem implements Serializable {
 
     public List<AuctionBid> getBids() {
         return bids;
+    }
+    
+    public AuctionBid getWinnerBid(){
+        return Collections.max(bids);
     }
 
     public String getDescription() {
