@@ -1,0 +1,30 @@
+<grammar ns="http://www.w3.org/1999/xhtml"
+         xmlns="http://relaxng.org/ns/structure/1.0">
+  <include href="xhtml/modules/datatypes.rng"/>
+  <include href="xhtml/modules/attribs.rng"/>
+  <include href="xhtml/modules/text.rng"/>
+  <include href="xhtml/modules/hypertext.rng"/>
+  <include href="xhtml/modules/list.rng"/>
+  <include href="xhtml/modules/image.rng"/>
+  <include href="xhtml/modules/ssismap.rng"/>
+  <include href="xhtml/modules/base.rng"/>
+  <include href="xhtml/modules/link.rng"/>
+  <include href="xhtml/modules/meta.rng"/>
+  <include href="xhtml/modules/param.rng"/>
+  <include href="xhtml/modules/object.rng"/>
+  <include href="xhtml/modules/bdo.rng"/>
+  <include href="xhtml/modules/pres.rng"/>
+  <include href="xhtml/modules/edit.rng"/>
+  <include href="xhtml/modules/applet.rng"/>
+  <include href="xhtml/modules/form.rng"/>
+  <include href="xhtml/modules/style.rng"/>
+  <include href="xhtml/modules/table.rng"/>
+  <include href="xhtml/modules/csismap.rng"/>
+  <include href="xhtml/modules/inlstyle.rng"/>
+  <include href="xhtml/modules/target.rng"/>
+  <include href="xhtml/modules/iframe.rng"/>
+  <include href="xhtml/modules/nameident.rng"/>
+  <start>
+    <ref name="div"/>
+  </start>
+</grammar>
