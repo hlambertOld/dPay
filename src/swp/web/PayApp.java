@@ -1,6 +1,15 @@
 package swp.web;
 
-import swp.model.AuctionItem;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.apache.jasper.tagplugins.jstl.core.Url;
+
+import swp.model.AuctionPaymentRequest;
+import swp.service.factory.ServiceFactory;
+import dk.brics.jwig.BadRequestException;
 import dk.brics.jwig.URLPattern;
 import dk.brics.jwig.WebApp;
 import dk.brics.xact.XML;
@@ -8,17 +17,31 @@ import dk.brics.xact.XML;
 @URLPattern("pay")
 public class PayApp extends WebApp{
     
+    
+    // TODO add access control
     @URLPattern("")
     public XML execute(String auctionserver, String item, String returnurl){
-        XML result = testMakePaymentSummary();
-        result = result.plug("AUCTION_SERVER", auctionserver);
-        result = result.plug("ITEM_ID", item);
-        result = result.plug("RETURN_URL", returnurl);
-        result = result.plug("TITLE", "BLAH");
-        return result.close();
+        try {
+            URL host = new URL(auctionserver);
+            URI id = new URI(item);
+            AuctionPaymentRequest paymentRequest = ServiceFactory.getInstance().getPaymentRequestService().load(host, id);
+            XML result = createPaymentXMLType();
+            result = result.plug("ITEM_NAME", paymentRequest.getItemName());
+            result = result.plug("ITEM_PRICE", paymentRequest.getPrice());
+            result = result.plug("BUYER", paymentRequest.getBuyer());
+            result = result.plug("AUCTION_SERVER", auctionserver);
+            result = result.plug("ITEM_ID", item);
+            result = result.plug("RETURN_URL", returnurl);
+            result = result.plug("TITLE", "Payment Request for " + paymentRequest.getItemName());
+            return result.close();
+        } catch (MalformedURLException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (URISyntaxException e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
     
-    private XML makePaymentSummary(AuctionItem item){
+    private XML makePaymentSummary(AuctionPaymentRequest item){
         return null;
     }
     

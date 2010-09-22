@@ -2,7 +2,7 @@ package swp.web;
 
 import java.util.List;
 
-import swp.model.AuctionItem;
+import swp.model.AuctionPaymentRequest;
 
 import dk.brics.jwig.URLPattern;
 import dk.brics.jwig.WebApp;
@@ -21,21 +21,21 @@ public class PaymentsApp extends WebApp{
         XML result = getWrapper();
         result = result.plug("BODY", XML.parseTemplate(
                 "You have purchased the following items: <[ITEM]>"));
-        for(AuctionItem item : getPurchasedItems(username)){
+        for(AuctionPaymentRequest item : getPurchasedItems(username)){
             result = addItem(result, item);
         }
         return result;
     }
     
-    private XML addItem(XML xml, AuctionItem item){
+    private XML addItem(XML xml, AuctionPaymentRequest item){
         return xml.plug("ITEM", "" +
         		"<xhtml:p>" +
-        		    "Name: " + item.getName() + ", Price: " /*item.getMaximumBid()*/ +
+        		    "Name: " + item.getItemName() + ", Price: " /*item.getMaximumBid()*/ +
     		    "</xhtml:p>" +
     		    "<[ITEM]>");
     }
     
-    private List<AuctionItem> getPurchasedItems(String username){
+    private List<AuctionPaymentRequest> getPurchasedItems(String username){
         return null;
     }
     
