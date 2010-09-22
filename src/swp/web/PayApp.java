@@ -7,8 +7,13 @@ import java.net.URL;
 
 import swp.model.AuctionPaymentRequest;
 import swp.service.factory.ServiceFactory;
+import swp.web.exception.AuctionDoesNotExistException;
+import swp.web.exception.AuctionPaymentSyntaxException;
+import dk.brics.jwig.AccessDeniedException;
+import dk.brics.jwig.AuthorizationRequiredException;
 import dk.brics.jwig.BadRequestException;
 import dk.brics.jwig.URLPattern;
+import dk.brics.jwig.User;
 import dk.brics.jwig.WebApp;
 import dk.brics.xact.XML;
 
@@ -16,13 +21,22 @@ import dk.brics.xact.XML;
 public class PayApp extends WebApp{
     
     
-    // TODO add access control
     @URLPattern("")
     public XML execute(String auctionserver, String item, String returnurl){
+        if(auctionserver == null || item == null || returnurl == null){
+            throw new BadRequestException("You need to provide all the requestparameters: auctionserver, item and returnurl");
+        }
+        User user = getUser();
+        if(user == null){
+            throw new AuthorizationRequiredException("You must login to start the payment"); 
+        }
         try {
             URL host = new URL(auctionserver);
             URI id = new URI(item);
             AuctionPaymentRequest paymentRequest = ServiceFactory.getInstance().getPaymentRequestService().load(host, id);
+            if(!user.getUsername().equals(paymentRequest.getBuyer())){
+                throw new AccessDeniedException("Only the buyer are able to pay the item");
+            }
             XML result = createPaymentXMLType();
             result = result.plug("ITEM_NAME", paymentRequest.getItemName());
             result = result.plug("ITEM_PRICE", paymentRequest.getPrice());
@@ -36,18 +50,13 @@ public class PayApp extends WebApp{
             throw new BadRequestException(e.getMessage());
         } catch (URISyntaxException e) {
             throw new BadRequestException(e.getMessage());
+        } catch (AuctionPaymentSyntaxException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (AuctionDoesNotExistException e) {
+            // TODO Send 404 exception
+            e.printStackTrace();
         }
-    }
-    
-    private XML makePaymentSummary(AuctionPaymentRequest item){
         return null;
-    }
-    
-    private XML testMakePaymentSummary(){
-        XML result = createPaymentXMLType();
-        result = result.plug("ITEM_NAME", "Bar");
-        result = result.plug("ITEM_PRICE", "100");
-        return result.plug("BUYER", "HANS");
     }
     
     private XML createPaymentXMLType(){
