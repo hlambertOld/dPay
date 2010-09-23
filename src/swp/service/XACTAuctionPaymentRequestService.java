@@ -11,6 +11,7 @@ import java.util.Date;
 
 import dk.brics.xact.Element;
 import dk.brics.xact.Node;
+import dk.brics.xact.NodeList;
 import dk.brics.xact.XML;
 import dk.brics.xact.operations.XMLValidator;
 
@@ -62,9 +63,12 @@ public class XACTAuctionPaymentRequestService implements AuctionPaymentRequestSe
         return (connection.getResponseCode() == 200);
     }
 
-    private int getMaxBidId(XML source){
+    private int getMaxBidId(XML source) throws AuctionPaymentSyntaxException{
+        NodeList<Node> list = source.get("//a:bid");
+        if(list.isEmpty())
+            throw new AuctionPaymentSyntaxException("There are no bids on the auction");
         int i = 0;
-        int result = 0;
+        int result = -1;
         int maxPrice = 0;
         for(Node n : source.get("//a:bid")){
             Element e = (Element) n;

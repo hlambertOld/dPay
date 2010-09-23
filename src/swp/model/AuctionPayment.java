@@ -27,6 +27,23 @@ public class AuctionPayment {
         return user;
     }
     
+    public int hashCode() {
+        int result;
+        result = 29 * (id.hashCode() + host.hashCode());
+        return result;
+    }
+    
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (!(other instanceof AuctionPayment)) {
+            return false;
+        }
+        AuctionPayment that = (AuctionPayment) other;
+        return this.host.equals(that.host) && this.id.equals(that.id);
+    }
+    
 
 
 }

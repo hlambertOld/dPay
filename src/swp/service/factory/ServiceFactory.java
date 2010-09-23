@@ -1,6 +1,8 @@
 package swp.service.factory;
 
 import swp.service.AuctionPaymentRequestService;
+import swp.service.AuctionPaymentService;
+import swp.service.InMemoryAuctionPaymentService;
 import swp.service.XACTAuctionPaymentRequestService;
 
 public class ServiceFactory {
@@ -8,6 +10,7 @@ public class ServiceFactory {
     private static ServiceFactory INSTANCE = new ServiceFactory();
 
     private AuctionPaymentRequestService paymentRequestService = null;
+    private AuctionPaymentService paymentService = null;
 
     private ServiceFactory() {
     }
@@ -26,6 +29,13 @@ public class ServiceFactory {
             paymentRequestService = new XACTAuctionPaymentRequestService();
         }
         return paymentRequestService;
+    }
+    
+    public AuctionPaymentService getPaymentService() {
+        if (paymentService == null) {
+            paymentService = new InMemoryAuctionPaymentService();
+        }
+        return paymentService;
     }
 }
 

@@ -58,4 +58,8 @@ public class AuctionPaymentRequest implements Serializable {
     public int getPrice(){
         return price;
     }
+    
+    public String valueOf(){
+        return buyer;
+    }
 }
