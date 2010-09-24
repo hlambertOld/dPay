@@ -4,7 +4,7 @@ import swp.web.PaymentsApp;
 import dk.brics.jwig.WebSite;
 
 /**
- * A minimal WebSite implementation that sets up a single web application
+ * The dPay website
  */
 public class Main extends WebSite {
 

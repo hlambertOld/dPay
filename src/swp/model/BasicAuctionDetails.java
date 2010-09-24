@@ -2,7 +2,7 @@ package swp.model;
 
 
 /**
- * The basic detils for the Auction
+ * The basic details for the Auction
  */
 
 public class BasicAuctionDetails {

@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
-    <display-name>JWIG</display-name>
+    <display-name>dPay</display-name>
 
     <filter>
         <filter-name>Dispatcher</filter-name>
