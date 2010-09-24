@@ -47,8 +47,9 @@ public class PaymentsApp extends DPayAbstractApp {
                         );
             } catch (AuctionPaymentSyntaxException e) {
                 // Should not happen. Item already validated when payment was processed. Do nothing.
+                throw new RuntimeException("Item syntax changed since validation. Should never happen"); // TODO this is ugly. The item should be re-evaluated and a reasonable error message should be returned.
             } catch (ItemURLReferenceException e) {
-                // Item not accessible. Do nothing
+                throw new RuntimeException("item not accessible"); // TODO This is ugly. The error should result in a reasonable error message and not a stack trace
             }
         }
         return result;
