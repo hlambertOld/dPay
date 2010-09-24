@@ -8,12 +8,12 @@ import swp.web.exception.AuctionPaymentExistException;
 
 public interface AuctionPaymentService {
     
-    public boolean exists(PaymentKey key);
+    boolean exists(PaymentKey key);
     
-    public void create(AuctionPayment payment) throws AuctionPaymentExistException;
+    void create(AuctionPayment payment) throws AuctionPaymentExistException;
     
-    public AuctionPayment getPayment(PaymentKey key);
+    AuctionPayment getPayment(PaymentKey key);
     
-    public List<AuctionPayment> getPaymentsByUser(String username);    
+    List<AuctionPayment> getPaymentsByUser(String username);    
 
 }
