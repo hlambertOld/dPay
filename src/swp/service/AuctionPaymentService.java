@@ -6,6 +6,10 @@ import swp.model.AuctionPayment;
 import swp.model.PaymentKey;
 import swp.web.exception.AuctionPaymentExistException;
 
+/**
+ * The interface for accessing and storing AuctionPayments
+ */
+
 public interface AuctionPaymentService {
     
     boolean exists(PaymentKey key);

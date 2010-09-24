@@ -19,6 +19,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * An implementation of the interface RemoteAuctionService that uses the XACT framework 
+ */
 
 public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
 

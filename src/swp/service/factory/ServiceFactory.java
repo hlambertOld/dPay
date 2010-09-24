@@ -5,6 +5,10 @@ import swp.service.AuctionPaymentService;
 import swp.service.InMemoryAuctionPaymentService;
 import swp.service.XACTAuctionPaymentRequestService;
 
+/**
+ * Thread-safe Singleton
+ */
+
 public class ServiceFactory {
     
     private static ServiceFactory INSTANCE = new ServiceFactory();

@@ -9,6 +9,10 @@ import swp.model.AuctionPayment;
 import swp.model.PaymentKey;
 import swp.web.exception.AuctionPaymentExistException;
 
+/**
+ * An implementation of the AuctionPaymentService that stores the payments in the memory
+ */
+
 public class InMemoryAuctionPaymentService implements AuctionPaymentService {
 
     private Map<PaymentKey, AuctionPayment> payments = new HashMap<PaymentKey, AuctionPayment>();

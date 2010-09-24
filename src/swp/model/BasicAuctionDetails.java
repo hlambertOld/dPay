@@ -1,6 +1,10 @@
 package swp.model;
 
 
+/**
+ * The basic detils for the Auction
+ */
+
 public class BasicAuctionDetails {
    
     private PaymentKey id;

@@ -16,6 +16,13 @@ import java.util.List;
 
 @URLPattern("payments")
 public class PaymentsApp extends DPayAbstractApp {
+    
+    /**
+     * Presents a page with the users purchase summary
+     * It is required that the user is logged in
+     * @param username 
+     * @return an XML object containing user purchase history
+     */
 
     @URLPattern("$username")
     @Priority(WebContext.PRE_CACHE)

@@ -6,7 +6,7 @@ import java.util.Date;
 import swp.web.exception.AuctionNotExpiredException;
 
 /**
- * Class representing a payment request. The class  
+ * Class representing a payment request.
  */
 
 public class AuctionPaymentRequest implements Serializable {
@@ -15,6 +15,14 @@ public class AuctionPaymentRequest implements Serializable {
     private BasicAuctionDetails details; 
     private Date endDate;
     private String buyer;
+    
+    /**
+     * 
+     * @param details the auction details
+     * @param buyer the winner of the auction
+     * @param endDate the date the auction expires. Need to be in the future
+     * @throws AuctionNotExpiredException if endDate is not in the future
+     */
     
     public AuctionPaymentRequest(BasicAuctionDetails details, String buyer, Date endDate) throws AuctionNotExpiredException {
         this.buyer = buyer;

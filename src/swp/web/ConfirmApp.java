@@ -12,6 +12,15 @@ import swp.model.PaymentKey;
 @URLPattern("confirm")
 public class ConfirmApp extends DPayAbstractApp{
     
+    /**
+     * Returns a status code "OK" if the item has been paid or "NO" if it has not.
+     * The method will not check if the auction exists on the server. 
+     * @param auctionserver the server that holds the auction
+     * @param item the auction id
+     * @return an XML object containing the given status.
+     * @throws BadRequestException if the parameters are not valid URI and URL
+     */
+    
     @URLPattern("")
     @Priority(WebContext.PRE_CACHE)
     public XML execute(String auctionserver, String item) throws BadRequestException {

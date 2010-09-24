@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URL;
 
 /**
- * 
+ * Identifier for a given auction
  */
 public class PaymentKey {
 
