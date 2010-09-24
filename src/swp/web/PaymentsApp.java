@@ -1,12 +1,12 @@
 package swp.web;
 
 import dk.brics.jwig.AuthorizationRequiredException;
+import dk.brics.jwig.Priority;
 import dk.brics.jwig.URLPattern;
 import dk.brics.jwig.User;
-import dk.brics.jwig.WebApp;
+import dk.brics.jwig.WebContext;
 import dk.brics.xact.XML;
 import swp.model.AuctionPayment;
-import swp.model.AuctionPaymentRequest;
 import swp.model.BasicAuctionDetails;
 import swp.service.factory.ServiceFactory;
 import swp.web.exception.AuctionPaymentSyntaxException;
@@ -18,6 +18,7 @@ import java.util.List;
 public class PaymentsApp extends DPayAbstractApp {
 
     @URLPattern("$username")
+    @Priority(WebContext.PRE_CACHE)
     public XML execute(String username) {
         User loggedInUser = getUser();
         if (!loggedInUser.getUsername().equals(username)) {
@@ -37,8 +38,6 @@ public class PaymentsApp extends DPayAbstractApp {
                         plug("ITEM_NAME", details.getItemName()).
                         plug("ITEM_PRICE", details.getPrice())
                         );
-                addResponseInvalidator(payment);
-                update(payment);
             } catch (AuctionPaymentSyntaxException e) {
                 // Should not happen. Item all ready validated when payment was processed. Do nothing.
             } catch (ItemURLReferenceException e) {
