@@ -4,6 +4,6 @@ Vi har valgt at bruge ren Java af IDE-hensyn og fordi vi skulle skrive så relat
 
 Det største problem vi havde var uønsket caching, men det blev løst med hjælp fra webboardet. Forsøg med at bruge JWIGs indbyggede dependency graf kunne vi kun få til at fungere med /pay.
 
-Der er et par enkelte TODOs tilbage i PaymentsApp, hvor der bliver kastet exceptions i stedet for en mere "pæn" håndtering. Vi valgte at se lidt stort på det, da det kun sker i situationer, hvor der på en dBay instans bliver aktivt ændret i et item på en måde, så den ikke længere er konsistent, eller i situationen, hvor en dBay instans går ned. 
+Vi har generelt end del "should never happen" RuntimExceptions. Det kan selvfølgelig laves pænere, ved at lave et ordentligt exceptions-træ, og håndtere fejlene undervejs, men det opfattede vi som mindre betydende detaljer. 
 
 Ellers relativt nemt at arbejde med (i forhold til JSF2 og Struts2).
