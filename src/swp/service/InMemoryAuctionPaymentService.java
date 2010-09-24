@@ -1,52 +1,49 @@
 package swp.service;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import swp.model.AuctionPayment;
+import swp.model.PaymentKey;
 import swp.web.exception.AuctionPaymentExistException;
 
 public class InMemoryAuctionPaymentService implements AuctionPaymentService {
 
-    private ArrayList<AuctionPayment> payments;
+    private Map<PaymentKey, AuctionPayment> payments = new HashMap<PaymentKey, AuctionPayment>();
 
-    public InMemoryAuctionPaymentService(){
-        payments = new ArrayList<AuctionPayment>();
+    @Override
+    public boolean exists(PaymentKey key) {
+        return payments.containsKey(key);
     }
 
     public void create(AuctionPayment payment) throws AuctionPaymentExistException{
-        if(payments.contains(payment))
-            throw new AuctionPaymentExistException("The AuctionPayment does all ready exist");
-        payments.add(payment);
+        if(payments.containsKey(payment.getId())) {
+            throw new AuctionPaymentExistException("The AuctionPayment already exists");
+        }
+        payments.put(payment.getId(), payment);
     }
 
     @Override
-    public boolean excist(URL host, URI id) {
-        AuctionPayment temp = new AuctionPayment(host, id, null);
-        System.out.println(payments.contains(temp));
-        return payments.contains(temp);
+    public AuctionPayment getPayment(PaymentKey key) {
+        return payments.get(key);
     }
 
+    /**
+     * Returns a list of payments by the given userName. Note that this will concatenate the payments of a user
+     * regardless of the origin of the auction item
+     * @param username the user name
+     * @return the list of payments
+     */
     @Override
     public List<AuctionPayment> getPaymentsByUser(String username) {
-        // TODO Auto-generated method stub
-        return null;
+        List<AuctionPayment> result = new ArrayList<AuctionPayment>();
+        for (AuctionPayment payment : payments.values()) {
+            if (payment.getUser().equals(username)) {
+                result.add(payment);
+            }
+        }
+        return result;
     }
-
-    @Override
-    public AuctionPayment getPayment(URL host, URI id) {
-        AuctionPayment temp = new AuctionPayment(host, id, null);
-        int index = payments.indexOf(temp);
-        if(index != -1){
-            return payments.get(index);
-        } 
-        return null;
-    }
-
-
-
-
 }
