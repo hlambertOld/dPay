@@ -1,13 +1,17 @@
 package swp.web;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import swp.model.AuctionPayment;
 import dk.brics.jwig.BadRequestException;
 import dk.brics.jwig.URLPattern;
 import dk.brics.jwig.WebApp;
 import dk.brics.xact.XML;
+import swp.model.PaymentKey;
+import swp.service.factory.ServiceFactory;
 
 @URLPattern("confirm")
 public class ConfirmApp extends WebApp{
@@ -15,30 +19,24 @@ public class ConfirmApp extends WebApp{
     @URLPattern("")
     public XML execute(String auctionserver, String item) throws BadRequestException {
         try {
-            URI id = new URI(item);
-            String status;
-            AuctionPayment payment = getPayment(auctionserver, id);
-            if(payment != null){
-                status = "OK";
-            } else {
-                status = "NO";
-            }
-            return getWrapper().plug("STATUS_CODE", status);
+            PaymentKey id = new PaymentKey(new URL(auctionserver), new URI(item));
+            boolean paid = ServiceFactory.getInstance().getPaymentService().exists(id);
+            addResponseInvalidator(id);
+            update(id);
+            return getWrapper().plug("STATUS_CODE", paid ? "OK" : "NO");
         } catch (URISyntaxException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (MalformedURLException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
     
-    private AuctionPayment getPayment(String host, URI id){
-        return null;
-    }
-    
     private XML getWrapper(){
-        XML.getNamespaceMap().put("p", "https://services.brics.dk/java/courseadmin/SWP/payment");
+        XML.getNamespaceMap().put("s", "https://services.brics.dk/java/courseadmin/SWP/payment");
         return XML.parseTemplate(
-                "<p:status>" +
+                "<s:status>" +
                 "<[STATUS_CODE]>" +
-                "</p:status>");
+                "</s:status>");
     }
 
 }

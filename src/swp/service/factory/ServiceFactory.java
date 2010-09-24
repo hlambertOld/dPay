@@ -24,14 +24,14 @@ public class ServiceFactory {
         throw new CloneNotSupportedException();
     }
 
-    public AuctionPaymentRequestService getPaymentRequestService() {
+    public synchronized AuctionPaymentRequestService getPaymentRequestService() {
         if (paymentRequestService == null) {
             paymentRequestService = new XACTAuctionPaymentRequestService();
         }
         return paymentRequestService;
     }
     
-    public AuctionPaymentService getPaymentService() {
+    public synchronized AuctionPaymentService getPaymentService() {
         if (paymentService == null) {
             paymentService = new InMemoryAuctionPaymentService();
         }
