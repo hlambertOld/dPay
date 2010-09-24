@@ -1,6 +1,10 @@
 package swp.model;
 
 
+/**
+ * Class representing a completed Payment.
+ */
+
 public class AuctionPayment {
 
     private String user;

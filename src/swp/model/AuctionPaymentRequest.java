@@ -3,8 +3,12 @@ package swp.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import swp.web.exception.AuctionNotExpiredException;
+
 /**
+ * Class representing a payment request. The class  
  */
+
 public class AuctionPaymentRequest implements Serializable {
 
     
@@ -12,13 +16,16 @@ public class AuctionPaymentRequest implements Serializable {
     private Date endDate;
     private String buyer;
     
-    public AuctionPaymentRequest(BasicAuctionDetails details, String buyer, Date endDate) {
+    public AuctionPaymentRequest(BasicAuctionDetails details, String buyer, Date endDate) throws AuctionNotExpiredException {
         this.buyer = buyer;
+        if (endDate.after(new Date())) {
+            throw new AuctionNotExpiredException("The auction is not expired");
+        }
         this.endDate = endDate;
         this.details = details;
     }
 
-    public AuctionPaymentRequest(PaymentKey id, String buyer, String itemName, Date endDate, int price) {
+    public AuctionPaymentRequest(PaymentKey id, String buyer, String itemName, Date endDate, int price) throws AuctionNotExpiredException {
         this(new BasicAuctionDetails(id, itemName, price), buyer, endDate); 
     }
 

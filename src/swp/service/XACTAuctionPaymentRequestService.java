@@ -39,9 +39,6 @@ public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
             XML source = getSource(key);
             String name = source.getString("//a:name");
             Date endDate = ISO8601_FORMAT.parse(source.getString("//a:enddate"));
-            if (endDate.after(new Date())) {
-                throw new AuctionNotExpiredException("The auction will not expire until " + ISO8601_FORMAT.format(endDate));
-            }
             int maxBidId = getMaxBidId(source);
             Element maxBidElement = source.getElement("//a:bid[" + maxBidId + "]");
             String buyer = maxBidElement.getAttribute("owner");
