@@ -1,9 +1,8 @@
 package swp.service.factory;
 
+import swp.service.AuctionPaymentService;
 import swp.service.LocalFileSystemAuctionPaymentService;
 import swp.service.RemoteAuctionService;
-import swp.service.AuctionPaymentService;
-import swp.service.InMemoryAuctionPaymentService;
 import swp.service.XACTAuctionPaymentRequestService;
 
 /**
@@ -11,10 +10,10 @@ import swp.service.XACTAuctionPaymentRequestService;
  */
 
 public class ServiceFactory {
-    
+
     private static ServiceFactory INSTANCE = new ServiceFactory();
 
-    private RemoteAuctionService remoteService= null;
+    private RemoteAuctionService remoteService = null;
     private AuctionPaymentService paymentService = null;
 
     private ServiceFactory() {
@@ -35,7 +34,7 @@ public class ServiceFactory {
         }
         return remoteService;
     }
-    
+
     public synchronized AuctionPaymentService getPaymentService() {
         if (paymentService == null) {
             paymentService = new LocalFileSystemAuctionPaymentService();

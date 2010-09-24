@@ -1,6 +1,7 @@
 package swp.web;
 
 import dk.brics.jwig.AuthorizationRequiredException;
+import dk.brics.jwig.BadRequestException;
 import dk.brics.jwig.Priority;
 import dk.brics.jwig.URLPattern;
 import dk.brics.jwig.User;
@@ -16,11 +17,12 @@ import java.util.List;
 
 @URLPattern("payments")
 public class PaymentsApp extends DPayAbstractApp {
-    
+
     /**
      * Presents a page with the users purchase summary
      * It is required that the user is logged in
-     * @param username 
+     *
+     * @param username username
      * @return an XML object containing user purchase history
      */
 
@@ -31,7 +33,7 @@ public class PaymentsApp extends DPayAbstractApp {
         if (!loggedInUser.getUsername().equals(username)) {
             throw new AuthorizationRequiredException("payments");
         }
-        
+
         XML result = getHtmlWrapper().plug("BODY", XML.parseTemplate("<p>Payments by <b><[USER]></b>:</p><ul><[ITEMS]></ul>"));
         result = result.plug("USER", username);
         List<AuctionPayment> payments = ServiceFactory.getInstance().getPaymentService().getPaymentsByUser(username);
@@ -44,12 +46,11 @@ public class PaymentsApp extends DPayAbstractApp {
                         plug("ITEM_ID", details.getId().getItemId()).
                         plug("ITEM_NAME", details.getItemName()).
                         plug("ITEM_PRICE", details.getPrice())
-                        );
+                );
             } catch (AuctionPaymentSyntaxException e) {
-                // Should not happen. Item already validated when payment was processed. Do nothing.
-                throw new RuntimeException("Item syntax changed since validation. Should never happen"); // TODO this is ugly. The item should be re-evaluated and a reasonable error message should be returned.
+                throw new BadRequestException(e.getMessage());
             } catch (ItemURLReferenceException e) {
-                throw new RuntimeException("item not accessible"); // TODO This is ugly. The error should result in a reasonable error message and not a stack trace
+                throw new BadRequestException(e.getMessage());
             }
         }
         return result;

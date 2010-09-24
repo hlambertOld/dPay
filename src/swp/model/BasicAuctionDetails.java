@@ -6,7 +6,7 @@ package swp.model;
  */
 
 public class BasicAuctionDetails {
-   
+
     private PaymentKey id;
     private String itemName;
     private int price;

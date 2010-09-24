@@ -1,11 +1,11 @@
 package swp.web.exception;
 
-public class ItemURLReferenceException extends Exception{
-    
-    public ItemURLReferenceException(){
+public class ItemURLReferenceException extends Exception {
+
+    public ItemURLReferenceException() {
         super();
     }
-    
+
     public ItemURLReferenceException(Throwable cause) {
         super(cause);
     }

@@ -1,11 +1,11 @@
 package swp.web.exception;
 
-public class AuctionNotExpiredException extends Exception{
-    
-    public AuctionNotExpiredException(){
+public class AuctionNotExpiredException extends Exception {
+
+    public AuctionNotExpiredException() {
         super();
     }
-    
+
     public AuctionNotExpiredException(Throwable cause) {
         super(cause);
     }

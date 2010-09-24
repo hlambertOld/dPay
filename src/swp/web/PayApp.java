@@ -24,17 +24,18 @@ public class PayApp extends DPayAbstractApp {
 
 
     /**
-     * Presents a page where the user can accept the payment of an item. 
+     * Presents a page where the user can accept the payment of an item.
      * If the payment has been processed all ready, the user will be told and
      * given a link to his payment overview.
      * It is required that the logged in user is the buyer
+     *
      * @param auctionserver the server that holds the auction
-     * @param item the auction id
-     * @param returnurl the URL that the user will be return to 
-     * after the processing of the payment
+     * @param item          the auction id
+     * @param returnurl     the URL that the user will be return to
+     *                      after the processing of the payment
      * @return an XML object containing the given page.
      */
-    
+
     @URLPattern("")
     public XML execute(String auctionserver, String item, String returnurl) {
         try {
@@ -65,7 +66,7 @@ public class PayApp extends DPayAbstractApp {
         }
     }
 
-    private void validateUser(User user,AuctionPaymentRequest paymentRequest) {
+    private void validateUser(User user, AuctionPaymentRequest paymentRequest) {
         if (!user.getUsername().equals(paymentRequest.getBuyer())) {
             throw new AccessDeniedException("Only the buyer are able to pay the item");
         }

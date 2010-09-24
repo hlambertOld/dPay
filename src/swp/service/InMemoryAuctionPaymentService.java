@@ -1,14 +1,13 @@
 package swp.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import swp.model.AuctionPayment;
 import swp.model.PaymentKey;
 import swp.web.exception.AuctionPaymentExistException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An implementation of the AuctionPaymentService that stores the payments in the memory
@@ -23,8 +22,8 @@ public class InMemoryAuctionPaymentService implements AuctionPaymentService {
         return payments.containsKey(key);
     }
 
-    public void create(AuctionPayment payment) throws AuctionPaymentExistException{
-        if(payments.containsKey(payment.getId())) {
+    public void create(AuctionPayment payment) throws AuctionPaymentExistException {
+        if (payments.containsKey(payment.getId())) {
             throw new AuctionPaymentExistException("The AuctionPayment already exists");
         }
         payments.put(payment.getId(), payment);
@@ -38,6 +37,7 @@ public class InMemoryAuctionPaymentService implements AuctionPaymentService {
     /**
      * Returns a list of payments by the given userName. Note that this will concatenate the payments of a user
      * regardless of the origin of the auction item
+     *
      * @param username the user name
      * @return the list of payments
      */

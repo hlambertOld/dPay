@@ -9,8 +9,8 @@ import swp.model.AuctionPaymentRequest;
 import swp.model.BasicAuctionDetails;
 import swp.model.PaymentKey;
 import swp.web.exception.AuctionNotExpiredException;
-import swp.web.exception.ItemURLReferenceException;
 import swp.web.exception.AuctionPaymentSyntaxException;
+import swp.web.exception.ItemURLReferenceException;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An implementation of the interface RemoteAuctionService that uses the XACT framework 
+ * An implementation of the interface RemoteAuctionService that uses the XACT framework
  */
 
 public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
@@ -30,11 +30,12 @@ public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
 
     /**
      * Loads an XML document from a remote location specified by the key
+     *
      * @param key the key identifying the location
      * @return the payment request, serialized from the received XML
      * @throws AuctionPaymentSyntaxException the XML was not well formed, the item was not expired, or no bids were found
-     * @throws ItemURLReferenceException could not fetch the XML
-     * @throws AuctionNotExpiredException the auction is not expired and not payable
+     * @throws ItemURLReferenceException     could not fetch the XML
+     * @throws AuctionNotExpiredException    the auction is not expired and not payable
      */
 
     public AuctionPaymentRequest loadPaymentRequest(PaymentKey key) throws AuctionPaymentSyntaxException, ItemURLReferenceException, AuctionNotExpiredException {
@@ -49,18 +50,19 @@ public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
             return new AuctionPaymentRequest(key, buyer, name, endDate, price);
         } catch (ParseException e) {
             throw new AuctionPaymentSyntaxException(e);
-        } 
+        }
 
     }
 
     /**
      * Loads an XML document from a remote location specified by the key
+     *
      * @param key the key identifying the location
      * @return the basic auction details, serialized from the received XML
      * @throws AuctionPaymentSyntaxException the XML was not well formed, the item was not expired, or no bids were found
-     * @throws ItemURLReferenceException could not fetch the XML
+     * @throws ItemURLReferenceException     could not fetch the XML
      */
-    
+
     public BasicAuctionDetails loadBasicDetails(PaymentKey key) throws AuctionPaymentSyntaxException, ItemURLReferenceException {
         XML source = getSource(key);
         String name = source.getString("//a:name");
@@ -68,11 +70,11 @@ public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
         Element maxBidElement = source.getElement("//a:bid[" + maxBidId + "]");
         int price = new Integer(maxBidElement.getAttribute("price"));
         return new BasicAuctionDetails(key, name, price);
-    } 
+    }
 
 
-    private XML getSource(PaymentKey key) throws ItemURLReferenceException, AuctionPaymentSyntaxException{
-        try{
+    private XML getSource(PaymentKey key) throws ItemURLReferenceException, AuctionPaymentSyntaxException {
+        try {
             URL host = key.getHost();
             URI id = key.getItemId();
             XML result = XML.parseDocument(new URL(host + "item?item=" + id));

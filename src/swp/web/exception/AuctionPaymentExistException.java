@@ -1,11 +1,11 @@
 package swp.web.exception;
 
-public class AuctionPaymentExistException extends Exception{
-    
-    public AuctionPaymentExistException(){
+public class AuctionPaymentExistException extends Exception {
+
+    public AuctionPaymentExistException() {
         super();
     }
-    
+
     public AuctionPaymentExistException(Throwable cause) {
         super(cause);
     }
