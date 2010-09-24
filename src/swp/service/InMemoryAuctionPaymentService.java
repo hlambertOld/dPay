@@ -1,6 +1,7 @@
 package swp.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class InMemoryAuctionPaymentService implements AuctionPaymentService {
     public List<AuctionPayment> getPaymentsByUser(String username) {
         List<AuctionPayment> result = new ArrayList<AuctionPayment>();
         for (AuctionPayment payment : payments.values()) {
-            if (payment.getUser().equals(username)) {
+            if (payment.getBuyer().equals(username)) {
                 result.add(payment);
             }
         }

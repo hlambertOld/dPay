@@ -1,5 +1,6 @@
 package swp.service.factory;
 
+import swp.service.LocalFileSystemAuctionPaymentService;
 import swp.service.RemoteAuctionService;
 import swp.service.AuctionPaymentService;
 import swp.service.InMemoryAuctionPaymentService;
@@ -37,7 +38,7 @@ public class ServiceFactory {
     
     public synchronized AuctionPaymentService getPaymentService() {
         if (paymentService == null) {
-            paymentService = new InMemoryAuctionPaymentService();
+            paymentService = new LocalFileSystemAuctionPaymentService();
         }
         return paymentService;
     }

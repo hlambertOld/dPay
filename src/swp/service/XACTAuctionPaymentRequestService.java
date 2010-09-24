@@ -92,7 +92,7 @@ public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
         int i = 0;
         int result = -1;
         int maxPrice = 0;
-        for (Node n : source.get("//a:bid")) {
+        for (Node n : list) {
             Element e = (Element) n;
             int currentPrice = new Integer(e.getAttribute("price"));
             if (currentPrice > maxPrice) {

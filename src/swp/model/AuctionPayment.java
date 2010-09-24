@@ -7,19 +7,19 @@ package swp.model;
 
 public class AuctionPayment {
 
-    private String user;
+    private String buyer;
     private PaymentKey id;
 
     public AuctionPayment(PaymentKey id, String user) {
         this.id = id;
-        this.user = user;
+        this.buyer = user;
     }
 
     public PaymentKey getId() {
         return id;
     }
 
-    public String getUser() {
-        return user;
+    public String getBuyer() {
+        return buyer;
     }
 }
