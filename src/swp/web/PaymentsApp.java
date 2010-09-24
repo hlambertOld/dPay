@@ -46,7 +46,7 @@ public class PaymentsApp extends DPayAbstractApp {
                         plug("ITEM_PRICE", details.getPrice())
                         );
             } catch (AuctionPaymentSyntaxException e) {
-                // Should not happen. Item all ready validated when payment was processed. Do nothing.
+                // Should not happen. Item already validated when payment was processed. Do nothing.
             } catch (ItemURLReferenceException e) {
                 // Item not accessible. Do nothing
             }
