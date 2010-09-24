@@ -1,30 +1,26 @@
 package swp.web;
 
 import dk.brics.jwig.AccessDeniedException;
-import dk.brics.jwig.AuthorizationRequiredException;
 import dk.brics.jwig.BadRequestException;
 import dk.brics.jwig.JWIGException;
 import dk.brics.jwig.SubmitHandler;
 import dk.brics.jwig.URLPattern;
 import dk.brics.jwig.User;
-import dk.brics.jwig.WebApp;
 import dk.brics.xact.XML;
 import swp.model.AuctionPayment;
 import swp.model.AuctionPaymentRequest;
 import swp.model.PaymentKey;
 import swp.service.factory.ServiceFactory;
+import swp.web.exception.AuctionNotExpiredException;
 import swp.web.exception.AuctionPaymentExistException;
 import swp.web.exception.AuctionPaymentSyntaxException;
 import swp.web.exception.ItemURLReferenceException;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Date;
 
 @URLPattern("pay")
-public class PayApp extends WebApp {
+public class PayApp extends DPayAbstractApp {
 
 
     @URLPattern("")
@@ -37,12 +33,8 @@ public class PayApp extends WebApp {
 
             User user = getUser();
 
-            AuctionPaymentRequest paymentRequest = ServiceFactory.getInstance().getPaymentRequestService().load(id);
+            AuctionPaymentRequest paymentRequest = ServiceFactory.getInstance().getRemoteAuctionService().loadPaymentRequest(id);
             addResponseInvalidator(paymentRequest);
-
-            if (paymentRequest.getEndDate().after(new Date())) {
-                return createAuctionHasNotExpired();
-            }
 
             validateUser(user, paymentRequest);
 
@@ -52,48 +44,23 @@ public class PayApp extends WebApp {
 
             return createPaymentXMLType(paymentRequest, returnAddress);
 
-        } catch (MalformedURLException e) {
-            throw new BadRequestException(e.getMessage());
-        } catch (URISyntaxException e) {
-            throw new BadRequestException(e.getMessage());
         } catch (AuctionPaymentSyntaxException e) {
             throw new BadRequestException(e.getMessage());
         } catch (ItemURLReferenceException e) {
             throw new BadRequestException(e.getMessage());
+        } catch (AuctionNotExpiredException e) {
+            return createAuctionHasNotExpired();
         }
     }
 
-    private void validateUser(User user,
-                              final AuctionPaymentRequest paymentRequest) {
+    private void validateUser(User user,AuctionPaymentRequest paymentRequest) {
         if (!user.getUsername().equals(paymentRequest.getBuyer())) {
             throw new AccessDeniedException("Only the buyer are able to pay the item");
         }
     }
 
-    private URL convertURL(String value, String parameterName) throws MalformedURLException {
-        if (value == null) {
-            throw new BadRequestException("You need to provide the request parameter " + parameterName);
-        }
-        return new URL(value);
-    }
-
-    private URI convertURI(String value, String parameterName) throws URISyntaxException {
-        if (value == null) {
-            throw new BadRequestException("You need to provide the request parameter " + parameterName);
-        }
-        return new URI(value);
-    }
-
-    public User getUser() {
-        User user = super.getUser();
-        if (user == null) {
-            throw new AuthorizationRequiredException("pay");
-        }
-        return user;
-    }
-
     private XML createPaymentXMLType(AuctionPaymentRequest paymentRequest, URL returnUrl) {
-        XML result = getWrapper();
+        XML result = getHtmlWrapper();
         result = result.plug("BODY", XML.parseTemplate(
                 "You are the winner of the auction for <[ITEM_NAME]>" +
                         "<p>The price for the item is <b><[ITEM_PRICE]></b></p>" +
@@ -125,7 +92,7 @@ public class PayApp extends WebApp {
     }
 
     private XML createPaymentExists(AuctionPaymentRequest paymentRequest) {
-        XML result = getWrapper();
+        XML result = getHtmlWrapper();
         result = result.plug("BODY", XML.parseTemplate(
                 "Your payment for \"<[ITEM_NAME]>\" has already been processed." +
                         "<p>Click <a href=[RETURN_URL]>here</a> to view your payment summary.</p>"));
@@ -135,24 +102,9 @@ public class PayApp extends WebApp {
     }
 
     private XML createAuctionHasNotExpired() {
-        XML result = getWrapper();
+        XML result = getHtmlWrapper();
         result = result.plug("BODY", XML.parseTemplate(
                 "The auction has not expired yet"));
         return result;
     }
-
-    private XML getWrapper() {
-        return XML.parseTemplate("<html>" +
-                "<head>" +
-                "<title>" +
-                "<[TITLE]>" +
-                "</title>" +
-                "</head>" +
-                "<body>" +
-                "<[BODY]>" +
-                "</body>" +
-                "</html>");
-    }
-
-
 }

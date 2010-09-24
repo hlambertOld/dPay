@@ -6,7 +6,9 @@ import dk.brics.xact.NodeList;
 import dk.brics.xact.XML;
 import dk.brics.xact.XMLException;
 import swp.model.AuctionPaymentRequest;
+import swp.model.BasicAuctionDetails;
 import swp.model.PaymentKey;
+import swp.web.exception.AuctionNotExpiredException;
 import swp.web.exception.ItemURLReferenceException;
 import swp.web.exception.AuctionPaymentSyntaxException;
 
@@ -18,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class XACTAuctionPaymentRequestService implements AuctionPaymentRequestService {
+public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
 
     private static final SimpleDateFormat ISO8601_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
@@ -26,33 +28,60 @@ public class XACTAuctionPaymentRequestService implements AuctionPaymentRequestSe
     /**
      * Loads an XML document from a remote location specified by the key
      * @param key the key identifying the location
-     * @return the payment reqeust, serialized from the received XML
-     * @throws AuctionPaymentSyntaxException the XML was not wellformed, the item was not expired, or no bids were found
+     * @return the payment request, serialized from the received XML
+     * @throws AuctionPaymentSyntaxException the XML was not well formed, the item was not expired, or no bids were found
      * @throws ItemURLReferenceException could not fetch the XML
+     * @throws AuctionNotExpiredException the auction is not expired and not payable
      */
-    @Override
-    public AuctionPaymentRequest load(PaymentKey key) throws AuctionPaymentSyntaxException, ItemURLReferenceException {
+
+    public AuctionPaymentRequest loadPaymentRequest(PaymentKey key) throws AuctionPaymentSyntaxException, ItemURLReferenceException, AuctionNotExpiredException {
         try {
-            URL host = key.getHost();
-            URI id = key.getItemId();
-
-            XML source = XML.parseDocument(new URL(host + "item?item=" + id));
-
-            XML.getNamespaceMap().put("a", "https://services.brics.dk/java/courseadmin/SWP/auction");
+            XML source = getSource(key);
             String name = source.getString("//a:name");
             Date endDate = ISO8601_FORMAT.parse(source.getString("//a:enddate"));
+            if (endDate.after(new Date())) {
+                throw new AuctionNotExpiredException("The auction will not expire until " + ISO8601_FORMAT.format(endDate));
+            }
             int maxBidId = getMaxBidId(source);
             Element maxBidElement = source.getElement("//a:bid[" + maxBidId + "]");
             String buyer = maxBidElement.getAttribute("owner");
             int price = new Integer(maxBidElement.getAttribute("price"));
-            return new AuctionPaymentRequest(new PaymentKey(host, id), buyer, name, endDate, price);
-
+            return new AuctionPaymentRequest(key, buyer, name, endDate, price);
         } catch (ParseException e) {
             throw new AuctionPaymentSyntaxException(e);
-        } catch (MalformedURLException e) {
-            throw new AuctionPaymentSyntaxException(e);
+        } 
+
+    }
+
+    /**
+     * Loads an XML document from a remote location specified by the key
+     * @param key the key identifying the location
+     * @return the basic auction details, serialized from the received XML
+     * @throws AuctionPaymentSyntaxException the XML was not well formed, the item was not expired, or no bids were found
+     * @throws ItemURLReferenceException could not fetch the XML
+     */
+    
+    public BasicAuctionDetails loadBasicDetails(PaymentKey key) throws AuctionPaymentSyntaxException, ItemURLReferenceException {
+        XML source = getSource(key);
+        String name = source.getString("//a:name");
+        int maxBidId = getMaxBidId(source);
+        Element maxBidElement = source.getElement("//a:bid[" + maxBidId + "]");
+        int price = new Integer(maxBidElement.getAttribute("price"));
+        return new BasicAuctionDetails(key, name, price);
+    } 
+
+
+    private XML getSource(PaymentKey key) throws ItemURLReferenceException, AuctionPaymentSyntaxException{
+        try{
+            URL host = key.getHost();
+            URI id = key.getItemId();
+            XML result = XML.parseDocument(new URL(host + "item?item=" + id));
+            XML.getNamespaceMap().put("a", "https://services.brics.dk/java/courseadmin/SWP/auction");
+            return result;
         } catch (XMLException e) {
             throw new ItemURLReferenceException("Error fetching Item XML: " + e.getMessage(), e);
+        } catch (MalformedURLException e) {
+            throw new AuctionPaymentSyntaxException(e);
         }
     }
 

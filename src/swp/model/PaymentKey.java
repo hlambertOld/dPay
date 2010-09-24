@@ -38,15 +38,7 @@ public class PaymentKey {
         return host;
     }
 
-    public void setHost(URL host) {
-        this.host = host;
-    }
-
     public URI getItemId() {
         return itemId;
-    }
-
-    public void setItemId(URI itemId) {
-        this.itemId = itemId;
     }
 }

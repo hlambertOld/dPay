@@ -14,7 +14,7 @@ import swp.model.PaymentKey;
 
 
 @URLPattern("confirm")
-public class ConfirmApp extends WebApp{
+public class ConfirmApp extends DPayAbstractApp{
     
     @URLPattern("")
     public XML execute(String auctionserver, String item) throws BadRequestException {
@@ -33,27 +33,6 @@ public class ConfirmApp extends WebApp{
                 "</s:status>");
     }
     
-    private URL convertURL(String value, String parameterName){
-        if(value == null){
-            throw new BadRequestException("You need to provide the request parameter " + parameterName);
-        }
-        try {
-            return new URL(value);
-        } catch (MalformedURLException e) {
-            throw new BadRequestException(e.getMessage());
-        }
-    }
     
-    private URI convertURI(String value, String parameterName) {
-        if(value == null){
-            throw new BadRequestException("You need to provide the request parameter " + parameterName);
-        }
-        try {
-            return new URI(value);
-        } catch (URISyntaxException e) {
-            throw new BadRequestException(e.getMessage());
-        }
-        
-    }
 
 }

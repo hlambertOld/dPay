@@ -1,6 +1,6 @@
 package swp.service.factory;
 
-import swp.service.AuctionPaymentRequestService;
+import swp.service.RemoteAuctionService;
 import swp.service.AuctionPaymentService;
 import swp.service.InMemoryAuctionPaymentService;
 import swp.service.XACTAuctionPaymentRequestService;
@@ -9,7 +9,7 @@ public class ServiceFactory {
     
     private static ServiceFactory INSTANCE = new ServiceFactory();
 
-    private AuctionPaymentRequestService paymentRequestService = null;
+    private RemoteAuctionService remoteService= null;
     private AuctionPaymentService paymentService = null;
 
     private ServiceFactory() {
@@ -24,11 +24,11 @@ public class ServiceFactory {
         throw new CloneNotSupportedException();
     }
 
-    public synchronized AuctionPaymentRequestService getPaymentRequestService() {
-        if (paymentRequestService == null) {
-            paymentRequestService = new XACTAuctionPaymentRequestService();
+    public synchronized RemoteAuctionService getRemoteAuctionService() {
+        if (remoteService == null) {
+            remoteService = new XACTAuctionPaymentRequestService();
         }
-        return paymentRequestService;
+        return remoteService;
     }
     
     public synchronized AuctionPaymentService getPaymentService() {
