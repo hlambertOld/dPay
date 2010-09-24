@@ -1,0 +1,1 @@
+Vi ville egentlig gerne checke, at vi modtager og henter validt XML via et relaxeret RELAX_NG skema (tøhø), men vi fandt ikke ud af hvordan (eller om) XACT har faciliteter til dette. Spørgsmål på webboard samt kig i manual, slides og sourcekoden gav 
