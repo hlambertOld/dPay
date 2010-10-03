@@ -1,6 +1,5 @@
 package swp.model;
 
-import java.net.URI;
 import java.net.URL;
 
 /**
@@ -9,9 +8,9 @@ import java.net.URL;
 public class PaymentKey {
 
     private URL host;
-    private URI itemId;
+    private String itemId;
 
-    public PaymentKey(URL host, URI itemId) {
+    public PaymentKey(URL host, String itemId) {
         this.host = host;
         this.itemId = itemId;
     }
@@ -39,7 +38,7 @@ public class PaymentKey {
         return host;
     }
 
-    public URI getItemId() {
+    public String getItemId() {
         return itemId;
     }
 }

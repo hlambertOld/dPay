@@ -25,7 +25,7 @@ public class ConfirmApp extends DPayAbstractApp {
     @URLPattern("")
     @Priority(WebContext.PRE_CACHE)
     public XML execute(String auctionserver, String item) throws BadRequestException {
-        PaymentKey id = new PaymentKey(convertURL(auctionserver, "auctionserver"), convertURI(item, "item"));
+        PaymentKey id = new PaymentKey(convertURL(auctionserver, "auctionserver"), check(item, "item"));
         boolean paid = ServiceFactory.getInstance().getPaymentService().exists(id);
         return getWrapper().plug("STATUS_CODE", paid ? "OK" : "NO");
     }

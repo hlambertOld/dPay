@@ -17,8 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,7 +108,7 @@ public class LocalFileSystemAuctionPaymentService implements AuctionPaymentServi
                 Element temp = (Element) node;
                 String buyer = temp.getAttribute("buyer");
                 URL server = new URL(temp.getAttribute("server"));
-                URI id = new URI(temp.getAttribute("item"));
+                String id = temp.getAttribute("item");
                 PaymentKey key = new PaymentKey(server, id);
                 AuctionPayment value = new AuctionPayment(key, buyer);
                 result.put(key, value);
@@ -120,8 +118,6 @@ public class LocalFileSystemAuctionPaymentService implements AuctionPaymentServi
         } catch (FileNotFoundException e) {
             throw new RuntimeException("should never happen", e);
         } catch (MalformedURLException e) {
-            throw new RuntimeException("should never happen", e);
-        } catch (URISyntaxException e) {
             throw new RuntimeException("should never happen", e);
         } catch (IOException e) {
             throw new RuntimeException("should never happen", e);

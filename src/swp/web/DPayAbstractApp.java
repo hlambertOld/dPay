@@ -7,8 +7,6 @@ import dk.brics.jwig.WebApp;
 import dk.brics.xact.XML;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -57,6 +55,9 @@ public abstract class DPayAbstractApp extends WebApp {
             throw new BadRequestException("You need to provide the request parameter " + parameterName);
         }
         try {
+            if (!value.endsWith("/")) {
+                value += "/";
+            }
             return new URL(value);
         } catch (MalformedURLException e) {
             throw new BadRequestException(e.getMessage());
@@ -72,15 +73,11 @@ public abstract class DPayAbstractApp extends WebApp {
      * @throws BadRequestException if the value is null or the value is malformed URI
      */
 
-    protected URI convertURI(String value, String parameterName) {
+    protected String check(String value, String parameterName) {
         if (value == null) {
             throw new BadRequestException("You need to provide the request parameter " + parameterName);
         }
-        try {
-            return new URI(value);
-        } catch (URISyntaxException e) {
-            throw new BadRequestException(e.getMessage());
-        }
+        return value;
     }
 
 

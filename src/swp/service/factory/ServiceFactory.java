@@ -13,8 +13,8 @@ public class ServiceFactory {
 
     private static ServiceFactory INSTANCE = new ServiceFactory();
 
-    private RemoteAuctionService remoteService = null;
-    private AuctionPaymentService paymentService = null;
+    private RemoteAuctionService remoteService = new XACTAuctionPaymentRequestService();
+    private AuctionPaymentService paymentService = new LocalFileSystemAuctionPaymentService();
 
     private ServiceFactory() {
     }
@@ -28,17 +28,11 @@ public class ServiceFactory {
         throw new CloneNotSupportedException();
     }
 
-    public synchronized RemoteAuctionService getRemoteAuctionService() {
-        if (remoteService == null) {
-            remoteService = new XACTAuctionPaymentRequestService();
-        }
+    public RemoteAuctionService getRemoteAuctionService() {
         return remoteService;
     }
 
-    public synchronized AuctionPaymentService getPaymentService() {
-        if (paymentService == null) {
-            paymentService = new LocalFileSystemAuctionPaymentService();
-        }
+    public AuctionPaymentService getPaymentService() {
         return paymentService;
     }
 }

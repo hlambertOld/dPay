@@ -76,7 +76,7 @@ public class XACTAuctionPaymentRequestService implements RemoteAuctionService {
     private XML getSource(PaymentKey key) throws ItemURLReferenceException, AuctionPaymentSyntaxException {
         try {
             URL host = key.getHost();
-            URI id = key.getItemId();
+            String id = key.getItemId();
             XML result = XML.parseDocument(new URL(host + "item?item=" + id));
             XML.getNamespaceMap().put("a", "https://services.brics.dk/java/courseadmin/SWP/auction");
             return result;

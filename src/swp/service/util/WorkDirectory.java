@@ -21,11 +21,11 @@ public class WorkDirectory {
         return workDirectory;
     }
 
-    public synchronized void setWorkDirectory(File workDirectory) {
+    public synchronized void setWorkDirectory(String workDirectory) {
         if (this.workDirectory == null) {
-            this.workDirectory = workDirectory;
-            if (!workDirectory.exists()) {
-                throw new RuntimeException("work directory " + workDirectory.getAbsolutePath() + " does not exist");
+            this.workDirectory = new File(System.getProperty("user.home"), workDirectory);
+            if (!this.workDirectory.exists()) {
+                throw new RuntimeException("work directory " + this.workDirectory.getAbsolutePath() + " does not exist");
             }
         } else {
             throw new RuntimeException("work directory can only be set once");

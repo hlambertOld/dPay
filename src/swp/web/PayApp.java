@@ -16,7 +16,7 @@ import swp.web.exception.AuctionPaymentExistException;
 import swp.web.exception.AuctionPaymentSyntaxException;
 import swp.web.exception.ItemURLReferenceException;
 
-import java.net.URI;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 @URLPattern("pay")
@@ -40,8 +40,7 @@ public class PayApp extends DPayAbstractApp {
     public XML execute(String auctionserver, String item, String returnurl) {
         try {
             URL host = convertURL(auctionserver, "auctionserver");
-            URL returnAddress = convertURL(returnurl, "returnurl");
-            URI itemId = convertURI(item, "item");
+            String itemId = check(item, "item");
             PaymentKey id = new PaymentKey(host, itemId);
 
             User user = getUser();
@@ -55,7 +54,7 @@ public class PayApp extends DPayAbstractApp {
                 return createPaymentExists(paymentRequest);
             }
 
-            return createPaymentXMLType(paymentRequest, returnAddress);
+            return createPaymentXMLType(paymentRequest, returnurl);
 
         } catch (AuctionPaymentSyntaxException e) {
             throw new BadRequestException(e.getMessage());
@@ -72,7 +71,7 @@ public class PayApp extends DPayAbstractApp {
         }
     }
 
-    private XML createPaymentXMLType(AuctionPaymentRequest paymentRequest, URL returnUrl) {
+    private XML createPaymentXMLType(AuctionPaymentRequest paymentRequest, String returnUrl) {
         XML result = getHtmlWrapper();
         result = result.plug("BODY", XML.parseTemplate(
                 "You are the winner of the auction for <[ITEM_NAME]>" +
@@ -89,15 +88,17 @@ public class PayApp extends DPayAbstractApp {
         return result;
     }
 
-    private SubmitHandler getHandler(final AuctionPaymentRequest paymentRequest, final URL returnUrl) {
+    private SubmitHandler getHandler(final AuctionPaymentRequest paymentRequest, final String returnUrl) {
         return new SubmitHandler() {
             public URL run() {
                 try {
                     AuctionPayment payment = new AuctionPayment(paymentRequest.getId(), paymentRequest.getBuyer());
                     ServiceFactory.getInstance().getPaymentService().create(payment);
                     update(paymentRequest);
-                    return returnUrl;
+                    return new URL(returnUrl);
                 } catch (AuctionPaymentExistException e) {
+                    throw new JWIGException(e.getMessage(), e);
+                } catch (MalformedURLException e) {
                     throw new JWIGException(e.getMessage(), e);
                 }
             }

@@ -13,7 +13,7 @@ public class Main extends WebSite {
 
     @Override
     public void init() {
-        WorkDirectory.getInstance().setWorkDirectory(new File((String) getProperty("workdirectory")));
+        WorkDirectory.getInstance().setWorkDirectory((String)getProperty("workdirectory"));
         add(new PayApp());
         add(new PaymentsApp());
         add(new ConfirmApp());
